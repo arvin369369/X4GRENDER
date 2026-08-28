@@ -5,20 +5,19 @@ import secrets
 import time
 from datetime import datetime
 from pathlib import Path
-from fastapi import FastAPI, Request, HTTPException, Response
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import logging
 
-# ====================== رمز ثابت تست فقط برای تست ======================
+# ====================== رمز ثابت فقط برای تست ======================
 ADMIN_PASSWORD = "369147"   # تغییر کن اگر خواستی
 # ====================================================================
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("X4G-Gateway")
 
-app = FastAPI(title="X4G Gateway v9.2", docs_url=None, redoc_url=None)
+app = FastAPI(title="X4G Gateway v9.2 - Test Only", docs_url=None, redoc_url=None)
 
 # ── Persistence (فایل json) ─────────────────────────────────────────────
 DATA_DIR = Path("/data")
@@ -98,13 +97,13 @@ async def require_auth(request: Request):
 @app.on_event("startup")
 async def startup():
     await load_state()
-    logger.info("X4G Gateway v9.2 روی livemy.app deploy شد.")
+    logger.info("X4G Gateway v9.2 - Test Only deployed")
 
 @app.on_event("shutdown")
 async def shutdown():
     await save_state()
 
-# ── صفحه اول (صفحه داشبورد) ────────────────────────────────────────────
+# ── صفحه اول (داشبورد) ────────────────────────────────────────────────
 @app.get("/")
 async def root():
     return HTMLResponse("""
@@ -112,7 +111,7 @@ async def root():
 <html lang="fa">
 <head>
     <meta charset="UTF-8">
-    <title>X4G Gateway v9.2</title>
+    <title>X4G Gateway v9.2 - Test Only</title>
     <style>
         body { font-family: Tahoma, Arial; background:#0f0f0f; color:#fff; text-align:center; padding:120px 20px; }
         h1 { font-size:42px; margin:0; }
@@ -121,7 +120,7 @@ async def root():
 </head>
 <body>
 <h1>X4G Gateway v9.2</h1>
-<p>Deploy شده روی livemy.app</p>
+<p>Deploy شده روی livemy.app (پلن رایگان)</p>
 <p>حالا <a href="/login" style="color:#00ff9d; text-decoration:none;">به داشبورد برو</a></p>
 </body>
 </html>
@@ -168,7 +167,7 @@ async def login_post(request: Request):
         return response
     return HTMLResponse("<h2 style='color:red'>رمز اشتباه است</h2>")
 
-# ── Dashboard Page (صفحه اول بعد از ورود) ───────────────────────────────
+# ── Dashboard Page ──────────────────────────────────────────────────────
 @app.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request):
     if not await is_valid_session(request.cookies.get(SESSION_COOKIE)):
@@ -183,9 +182,9 @@ async def dashboard(request: Request):
 </head>
 <body>
 <h1>خوش آمدید به X4G Gateway v9.2</h1>
-<p>با موفقیت deploy شده.</p>
+<p>با موفقیت deploy شده (پلن رایگان).</p>
 <p>رمز تست: <b>369147</b></p>
-<p>حالا می‌تونی لینک VLESS رو تست کنی.</p>
+<p>حالا می‌تونی تست کنی.</p>
 </body>
 </html>
     """)
