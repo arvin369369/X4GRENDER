@@ -11,7 +11,7 @@ import uvicorn
 import logging
 
 # ====================== رمز ثابت فقط برای تست ======================
-ADMIN_PASSWORD = "369147"   # تغییر کن اگر خواستی
+ADMIN_PASSWORD = "369147"
 # ====================================================================
 
 logging.basicConfig(level=logging.INFO)
@@ -19,7 +19,7 @@ logger = logging.getLogger("X4G-Gateway")
 
 app = FastAPI(title="X4G Gateway v9.2 - Test Only", docs_url=None, redoc_url=None)
 
-# ── Persistence (فایل json) ─────────────────────────────────────────────
+# ── Persistence ─────────────────────────────────────────────
 DATA_DIR = Path("/data")
 DATA_FILE = DATA_DIR / "x4g_state.json"
 SAVE_LOCK = asyncio.Lock()
@@ -55,7 +55,7 @@ async def save_state():
         except:
             pass
 
-# ── State و Auth (رمز ثابت 369147) ─────────────────────────────────────
+# ── State و Auth ────────────────────────────────────────────
 LINKS: dict = {}
 LINKS_LOCK = asyncio.Lock()
 SUBS: dict = {}
@@ -93,7 +93,7 @@ async def require_auth(request: Request):
         raise HTTPException(status_code=401, detail="رمز اشتباه است")
     return token
 
-# ── Startup ─────────────────────────────────────────────────────────────
+# ── Startup ─────────────────────────────────────────────────
 @app.on_event("startup")
 async def startup():
     await load_state()
@@ -103,7 +103,7 @@ async def startup():
 async def shutdown():
     await save_state()
 
-# ── صفحه اول (داشبورد) ────────────────────────────────────────────────
+# ── صفحه اول ───────────────────────────────────────────────
 @app.get("/")
 async def root():
     return HTMLResponse("""
@@ -126,7 +126,7 @@ async def root():
 </html>
     """)
 
-# ── Login Page ──────────────────────────────────────────────────────────
+# ── Login Page (با GET و POST) ──────────────────────────────
 @app.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
     if await is_valid_session(request.cookies.get(SESSION_COOKIE)):
@@ -167,7 +167,7 @@ async def login_post(request: Request):
         return response
     return HTMLResponse("<h2 style='color:red'>رمز اشتباه است</h2>")
 
-# ── Dashboard Page ──────────────────────────────────────────────────────
+# ── Dashboard Page (صفحه اول) ───────────────────────────────
 @app.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request):
     if not await is_valid_session(request.cookies.get(SESSION_COOKIE)):
