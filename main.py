@@ -22,4 +22,10 @@ X4G_SECRET = os.environ.get("X4G_SECRET", SECRET_KEY)  # برای compatibility 
 DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
 # استفاده از رمز ادمین در AUTH
-AUTH["password_hash"] = hash_password(ADMIN_PASSWORD)
+SESSION_COOKIE = "x4g_session"
+SESSION_TTL = 60 * 60 * 24 * 7
+
+def hash_password(pw: str) -> str:
+    return hashlib.sha256(f"{pw}x4g-secret-2026".encode()).hexdigest()  # برای تست
+
+AUTH = {"password_hash": hash_password("369147")}
