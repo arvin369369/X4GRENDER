@@ -15,17 +15,9 @@ RAILWAY_PUBLIC_DOMAIN = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "localhost")
 DATA_DIR = Path(os.environ.get("DATA_DIR", "/data"))
 
 # ── رمز ادمین (در پنل تغییر می‌کنی) ────────
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "123456")  # تغییر در Render Settings
+
 
 # ── متغیرهای اضافی (در Render اضافه کن) ─────
 X4G_SECRET = os.environ.get("X4G_SECRET", SECRET_KEY)  # برای compatibility قدیمی
 DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 
-# استفاده از رمز ادمین در AUTH
-SESSION_COOKIE = "x4g_session"
-SESSION_TTL = 60 * 60 * 24 * 7
-
-def hash_password(pw: str) -> str:
-    return hashlib.sha256(f"{pw}x4g-secret-2026".encode()).hexdigest()  # برای تست
-
-AUTH = {"password_hash": hash_password("369147")}
